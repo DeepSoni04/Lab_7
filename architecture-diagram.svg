@@ -1,0 +1,212 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 820" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+
+    <!-- Docker Network Gradient -->
+    <linearGradient id="dockerNetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#0369a1" stop-opacity="0.04" />
+    </linearGradient>
+
+    <!-- Component Card Gradients -->
+    <linearGradient id="clientCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <linearGradient id="gatewayCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#6d28d9" />
+    </linearGradient>
+    <linearGradient id="userCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+    <linearGradient id="productCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+    <linearGradient id="orderCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <linearGradient id="atlasCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00684a" />
+      <stop offset="100%" stop-color="#023430" />
+    </linearGradient>
+
+    <!-- Markers -->
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#c084fc" />
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399" />
+    </marker>
+    <marker id="arrowYellow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#fbbf24" />
+    </marker>
+    <marker id="arrowAtlas" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981" />
+    </marker>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#000000" flood-opacity="0.45" />
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="1150" height="820" fill="url(#bgGrad)" />
+
+  <!-- Title & Header -->
+  <text x="575" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="bold" fill="#f8fafc" text-anchor="middle">
+    CampusConnect Architecture — Lab 7
+  </text>
+  <text x="575" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle">
+    API Gateway (Single Public Ingress) • Configuration-Based Service Discovery • Internal Docker Isolation • MongoDB Atlas
+  </text>
+
+  <!-- 1. PUBLIC INTERNET / CLIENT LAYER -->
+  <rect x="50" y="90" width="1050" height="85" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1.5" />
+  <text x="75" y="112" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#64748b" text-transform="uppercase" letter-spacing="1">
+    Client Layer (Public Internet)
+  </text>
+  <g filter="url(#shadow)">
+    <rect x="375" y="105" width="400" height="55" rx="8" fill="url(#clientCard)" />
+    <text x="575" y="130" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      Client Apps / Postman / Browsers
+    </text>
+    <text x="575" y="148" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#bfdbfe" text-anchor="middle">
+      Sends all HTTP requests ONLY to the Public Gateway (Port 8080)
+    </text>
+  </g>
+
+  <!-- Arrow: Client -> Gateway -->
+  <line x1="575" y1="160" x2="575" y2="210" stroke="#c084fc" stroke-width="2.5" marker-end="url(#arrowPurple)" />
+  <text x="585" y="190" font-family="monospace" font-size="10" fill="#c084fc">Public HTTP / JSON</text>
+
+  <!-- 2. API GATEWAY LAYER (Single Public Entry Point) -->
+  <g filter="url(#shadow)">
+    <rect x="180" y="215" width="790" height="115" rx="14" fill="#1e293b" stroke="#7c3aed" stroke-width="2" />
+    <rect x="180" y="215" width="790" height="38" rx="14" fill="url(#gatewayCard)" />
+    <text x="575" y="240" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      API Gateway (api-gateway) — Port :8080 (ONLY Exposed Port)
+    </text>
+
+    <!-- Gateway Sub-Components -->
+    <rect x="200" y="265" width="220" height="50" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1" />
+    <text x="310" y="285" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#38bdf8" text-anchor="middle">Service Discovery Layer</text>
+    <text x="310" y="302" font-family="monospace" font-size="9.5" fill="#94a3b8" text-anchor="middle">config/serviceRegistry.js</text>
+
+    <rect x="440" y="265" width="250" height="50" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1" />
+    <text x="565" y="285" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#c084fc" text-anchor="middle">Reverse-Proxy Middleware</text>
+    <text x="565" y="302" font-family="monospace" font-size="9.5" fill="#94a3b8" text-anchor="middle">/users | /products | /orders</text>
+
+    <rect x="710" y="265" width="240" height="50" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1" />
+    <text x="830" y="285" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#f87171" text-anchor="middle">Cross-Cutting Concerns</text>
+    <text x="830" y="302" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" fill="#94a3b8" text-anchor="middle">Request Logging • 502/503 Handler</text>
+  </g>
+
+  <!-- 3. ISOLATED DOCKER NETWORK BOUNDARY -->
+  <rect x="50" y="360" width="1050" height="305" rx="16" fill="url(#dockerNetGrad)" stroke="#0284c7" stroke-width="2" stroke-dasharray="6 4" />
+  <text x="75" y="385" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#38bdf8">
+    Internal Docker Bridge Network: <tspan fill="#e0f2fe">campus-network</tspan> (Ports NOT Exposed to Host)
+  </text>
+  <text x="1080" y="385" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#f87171" text-anchor="end">
+    Direct Host Access (3001/3002/3003) Blocked
+  </text>
+
+  <!-- USER SERVICE BOX -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="415" width="280" height="215" rx="12" fill="#1e293b" stroke="#0284c7" stroke-width="1.5" />
+    <rect x="80" y="415" width="280" height="36" rx="12" fill="url(#userCard)" />
+    <text x="220" y="438" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      User Service (user-service)
+    </text>
+    <text x="220" y="470" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">
+      Internal Port: <tspan fill="#38bdf8" font-weight="bold">3001</tspan> (Expose only)
+    </text>
+    <line x1="95" y1="485" x2="345" y2="485" stroke="#334155" stroke-width="1" />
+    <text x="100" y="510" font-family="monospace" font-size="10.5" fill="#38bdf8">GET    /users</text>
+    <text x="100" y="530" font-family="monospace" font-size="10.5" fill="#38bdf8">GET    /users/:id</text>
+    <text x="100" y="550" font-family="monospace" font-size="10.5" fill="#38bdf8">POST   /users</text>
+    <text x="100" y="570" font-family="monospace" font-size="10.5" fill="#38bdf8">PUT    /users/:id</text>
+    <text x="100" y="590" font-family="monospace" font-size="10.5" fill="#38bdf8">DELETE /users/:id</text>
+    <text x="100" y="615" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">Owns: user_db schema</text>
+  </g>
+
+  <!-- PRODUCT SERVICE BOX -->
+  <g filter="url(#shadow)">
+    <rect x="435" y="415" width="280" height="215" rx="12" fill="#1e293b" stroke="#059669" stroke-width="1.5" />
+    <rect x="435" y="415" width="280" height="36" rx="12" fill="url(#productCard)" />
+    <text x="575" y="438" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      Product Service (product-service)
+    </text>
+    <text x="575" y="470" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">
+      Internal Port: <tspan fill="#34d399" font-weight="bold">3002</tspan> (Expose only)
+    </text>
+    <line x1="450" y1="485" x2="700" y2="485" stroke="#334155" stroke-width="1" />
+    <text x="455" y="510" font-family="monospace" font-size="10.5" fill="#34d399">GET    /products</text>
+    <text x="455" y="530" font-family="monospace" font-size="10.5" fill="#34d399">GET    /products/:id</text>
+    <text x="455" y="550" font-family="monospace" font-size="10.5" fill="#34d399">POST   /products</text>
+    <text x="455" y="570" font-family="monospace" font-size="10.5" fill="#34d399">PUT    /products/:id</text>
+    <text x="455" y="590" font-family="monospace" font-size="10.5" fill="#34d399">DELETE /products/:id</text>
+    <text x="455" y="615" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">Owns: product_db schema</text>
+  </g>
+
+  <!-- ORDER SERVICE BOX -->
+  <g filter="url(#shadow)">
+    <rect x="790" y="415" width="280" height="215" rx="12" fill="#1e293b" stroke="#d97706" stroke-width="1.5" />
+    <rect x="790" y="415" width="280" height="36" rx="12" fill="url(#orderCard)" />
+    <text x="930" y="438" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      Order Service (order-service)
+    </text>
+    <text x="930" y="470" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">
+      Internal Port: <tspan fill="#fbbf24" font-weight="bold">3003</tspan> (Expose only)
+    </text>
+    <line x1="805" y1="485" x2="1055" y2="485" stroke="#334155" stroke-width="1" />
+    <text x="810" y="510" font-family="monospace" font-size="10.5" fill="#fbbf24">POST   /orders</text>
+    <text x="810" y="530" font-family="monospace" font-size="10.5" fill="#fbbf24">GET    /orders</text>
+    <text x="810" y="550" font-family="monospace" font-size="10.5" fill="#fbbf24">GET    /orders/:id</text>
+    <text x="810" y="575" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Validates via Internal REST:</text>
+    <text x="810" y="593" font-family="monospace" font-size="9.5" fill="#38bdf8">• http://user-service:3001</text>
+    <text x="810" y="609" font-family="monospace" font-size="9.5" fill="#34d399">• http://product-service:3002</text>
+  </g>
+
+  <!-- Gateway Proxy Routing Arrows -->
+  <path d="M 330 330 C 260 360, 220 380, 220 415" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowBlue)" />
+  <path d="M 575 330 C 575 360, 575 380, 575 415" fill="none" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)" />
+  <path d="M 820 330 C 890 360, 930 380, 930 415" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowYellow)" />
+
+  <!-- 4. PERSISTENCE LAYER: MONGODB ATLAS CLOUD -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="695" width="1050" height="95" rx="12" fill="url(#atlasCard)" stroke="#00ed64" stroke-width="1.5" />
+    <text x="75" y="722" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#00ed64">
+      Cloud Persistence Layer: MongoDB Atlas (mongodb+srv://...)
+    </text>
+    <text x="75" y="742" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#a7f3d0">
+      Database-per-Service: Each microservice owns its independent database schema in the cloud.
+    </text>
+
+    <!-- DB Tags -->
+    <rect x="220" y="753" width="140" height="24" rx="4" fill="#023430" stroke="#00ed64" stroke-width="1" />
+    <text x="290" y="769" font-family="monospace" font-size="11" fill="#00ed64" font-weight="bold" text-anchor="middle">user_db</text>
+
+    <rect x="505" y="753" width="140" height="24" rx="4" fill="#023430" stroke="#00ed64" stroke-width="1" />
+    <text x="575" y="769" font-family="monospace" font-size="11" fill="#00ed64" font-weight="bold" text-anchor="middle">product_db</text>
+
+    <rect x="790" y="753" width="140" height="24" rx="4" fill="#023430" stroke="#00ed64" stroke-width="1" />
+    <text x="860" y="769" font-family="monospace" font-size="11" fill="#00ed64" font-weight="bold" text-anchor="middle">order_db</text>
+  </g>
+
+  <!-- DB Connection Lines -->
+  <line x1="220" y1="630" x2="290" y2="750" stroke="#00ed64" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrowAtlas)" />
+  <line x1="575" y1="630" x2="575" y2="750" stroke="#00ed64" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrowAtlas)" />
+  <line x1="930" y1="630" x2="860" y2="750" stroke="#00ed64" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrowAtlas)" />
+</svg>

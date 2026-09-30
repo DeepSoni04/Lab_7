@@ -1,0 +1,27 @@
+﻿{
+  "version": "1.0.0",
+  "environment": "production",
+  "services": {
+    "userService": {
+      "name": "User Service",
+      "url": "http://user-service:3001",
+      "prefix": "/users",
+      "timeout": 5000,
+      "description": "User profile & identity management"
+    },
+    "productService": {
+      "name": "Product Service",
+      "url": "http://product-service:3002",
+      "prefix": "/products",
+      "timeout": 5000,
+      "description": "Product catalog & inventory stock"
+    },
+    "orderService": {
+      "name": "Order Service",
+      "url": "http://order-service:3003",
+      "prefix": "/orders",
+      "timeout": 5000,
+      "description": "Order processing & inter-service orchestration"
+    }
+  }
+}

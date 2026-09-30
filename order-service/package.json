@@ -1,0 +1,27 @@
+{
+  "name": "order-service",
+  "version": "1.0.0",
+  "description": "CampusConnect Order Microservice — SOA & Web Services Lab 6",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "microservices",
+    "docker",
+    "soa",
+    "order-service",
+    "express",
+    "inter-service-communication"
+  ],
+  "author": "Param Patel",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "mongoose": "^8.8.4"
+  }
+}

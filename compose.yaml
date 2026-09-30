@@ -1,0 +1,111 @@
+﻿services:
+  # -------------------------------------------------------------
+  # API GATEWAY (Single Public Ingress Point)
+  # Only this service exposes an external port to the host/internet
+  # -------------------------------------------------------------
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: production
+      GATEWAY_PORT: 8080
+      USER_SERVICE_URL: http://user-service:3001
+      PRODUCT_SERVICE_URL: http://product-service:3002
+      ORDER_SERVICE_URL: http://order-service:3003
+      SERVICE_TIMEOUT: 5000
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+    networks:
+      - campus-network
+    restart: unless-stopped
+
+  # -------------------------------------------------------------
+  # USER MICROSERVICE (Internal to Docker Network Only)
+  # Reachable only through api-gateway or order-service
+  # -------------------------------------------------------------
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    expose:
+      - "3001"
+    environment:
+      NODE_ENV: production
+      USER_SERVICE_PORT: 3001
+      PORT: 3001
+      MONGO_URI: ${MONGO_URI_USER:-mongodb://mongodb:27017/user_db}
+    depends_on:
+      - mongodb
+    networks:
+      - campus-network
+    restart: unless-stopped
+
+  # -------------------------------------------------------------
+  # PRODUCT MICROSERVICE (Internal to Docker Network Only)
+  # Reachable only through api-gateway or order-service
+  # -------------------------------------------------------------
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    expose:
+      - "3002"
+    environment:
+      NODE_ENV: production
+      PRODUCT_SERVICE_PORT: 3002
+      PORT: 3002
+      MONGO_URI: ${MONGO_URI_PRODUCT:-mongodb://mongodb:27017/product_db}
+    depends_on:
+      - mongodb
+    networks:
+      - campus-network
+    restart: unless-stopped
+
+  # -------------------------------------------------------------
+  # ORDER MICROSERVICE (Internal to Docker Network Only)
+  # Reachable only through api-gateway
+  # -------------------------------------------------------------
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    expose:
+      - "3003"
+    environment:
+      NODE_ENV: production
+      ORDER_SERVICE_PORT: 3003
+      PORT: 3003
+      MONGO_URI: ${MONGO_URI_ORDER:-mongodb://mongodb:27017/order_db}
+      USER_SERVICE_URL: http://user-service:3001
+      PRODUCT_SERVICE_URL: http://product-service:3002
+      HTTP_TIMEOUT_MS: 3000
+    depends_on:
+      - mongodb
+      - user-service
+      - product-service
+    networks:
+      - campus-network
+    restart: unless-stopped
+
+  # -------------------------------------------------------------
+  # MONGODB PERSISTENCE LAYER (Internal to Docker Network Only)
+  # -------------------------------------------------------------
+  mongodb:
+    image: mongo:latest
+    container_name: campus-mongo
+    expose:
+      - "27017"
+    volumes:
+      - campus-mongo-data:/data/db
+    networks:
+      - campus-network
+    restart: unless-stopped
+
+networks:
+  campus-network:
+    name: campus-network
+    driver: bridge
+
+volumes:
+  campus-mongo-data:

@@ -1,0 +1,293 @@
+﻿{
+  "info": {
+    "_postman_id": "campusconnect-lab7-gateway",
+    "name": "Microservices – Lab 7 (API Gateway & Service Discovery)",
+    "description": "Postman API Collection for SOA & Web Services Lab 7: API Gateway, Configuration-Based Service Discovery & Cloud Deployment.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "gateway_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "cloud_gateway_url",
+      "value": "https://campusconnect-gateway.onrender.com",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Gateway Health & Discovery",
+      "item": [
+        {
+          "name": "GET Gateway Health",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway_url}}/health",
+              "host": ["{{gateway_url}}"],
+              "path": ["health"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Gateway reports UP', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.status).to.eql('UP');",
+                  "    pm.expect(json.service).to.eql('api-gateway');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Service Discovery Registry (/routes)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway_url}}/routes",
+              "host": ["{{gateway_url}}"],
+              "path": ["routes"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Registry returns routing table', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.routingTable.length).to.be.at.least(3);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Gateway Routed: User Service (/users)",
+      "item": [
+        {
+          "name": "GET /users via Gateway",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway_url}}/users",
+              "host": ["{{gateway_url}}"],
+              "path": ["users"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('User list returned via gateway proxy', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data.length).to.be.at.least(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /users/:id (101) via Gateway",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway_url}}/users/101",
+              "host": ["{{gateway_url}}"],
+              "path": ["users", "101"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('User 101 profile received', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.name).to.eql('Aarav Patel');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Gateway Routed: Product Service (/products)",
+      "item": [
+        {
+          "name": "GET /products via Gateway",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway_url}}/products",
+              "host": ["{{gateway_url}}"],
+              "path": ["products"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Product catalog returned', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /products/:id (501) via Gateway",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway_url}}/products/501",
+              "host": ["{{gateway_url}}"],
+              "path": ["products", "501"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Product 501 received', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.price).to.eql(45);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Gateway Routed: Order Service (/orders)",
+      "item": [
+        {
+          "name": "POST /orders via Gateway (Inter-Service Validation)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"101\",\n  \"productId\": \"501\",\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/orders",
+              "host": ["{{gateway_url}}"],
+              "path": ["orders"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201 Created', function () { pm.response.to.have.status(201); });",
+                  "pm.test('Order created with validated user & product', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data.totalAmount).to.eql(90);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /orders via Gateway",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway_url}}/orders",
+              "host": ["{{gateway_url}}"],
+              "path": ["orders"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5. Error Handling & Resilience",
+      "item": [
+        {
+          "name": "Unreachable Service (Centralized 502/503 Handler)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway_url}}/users",
+              "host": ["{{gateway_url}}"],
+              "path": ["users"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Centralized error returns 502 or 503', function () {",
+                  "    pm.expect([502, 503]).to.include(pm.response.code);",
+                  "});",
+                  "pm.test('Gateway error format verified', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.gateway).to.eql('api-gateway');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
